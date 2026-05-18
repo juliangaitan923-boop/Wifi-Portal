@@ -55,7 +55,6 @@
     .locked { color: #dc2626; font-size: 13px; margin-top: 0.75rem; display: none; }
     .attempts { font-size: 12px; color: #9ca3af; margin-top: 0.5rem; }
 
-    /* Success */
     #success-card {
       background: #fff; border-radius: 16px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.10);
@@ -86,7 +85,6 @@
 </head>
 <body>
 
-<!-- Login -->
 <div class="card" id="login-card">
   <div class="icon-circle">
     <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="#1a73e8" stroke="none"/></svg>
@@ -104,7 +102,6 @@
   <p class="attempts" id="attempts-left"></p>
 </div>
 
-<!-- Success -->
 <div id="success-card">
   <div class="icon-circle success-icon">
     <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
@@ -115,19 +112,19 @@
   <div class="wifi-box">
     <div class="wifi-row">
       <span class="wifi-lbl">Red (SSID)</span>
-      <span class="wifi-val">DIB_b8ag</span>
+      <span class="wifi-val">FAMILIA PINEDO GAITAN</span>
     </div>
     <div class="wifi-row">
       <span class="wifi-lbl">Contraseña</span>
-      <span class="wifi-val">wlangac2</span>
+      <span class="wifi-val">Luisa1112#</span>
       <button class="copy-btn" onclick="copyPw()">Copiar</button>
     </div>
   </div>
-  <p class="hint">Ve a <strong>Ajustes → WiFi</strong> en tu celular,<br>busca <strong>DIB_b8ag</strong> e ingresa la contraseña.</p>
+  <p class="hint">Ve a <strong>Ajustes → WiFi</strong> en tu celular,<br>busca <strong>FAMILIA PINEDO GAITAN</strong> e ingresa la contraseña.</p>
 </div>
 
 <script>
-  const CORRECT = "Visita2025#";
+  const CORRECT = "1234";
   let attempts = 0;
   const MAX = 3;
 
@@ -162,7 +159,7 @@
   }
 
   function copyPw() {
-    navigator.clipboard.writeText('wlangac2').then(() => {
+    navigator.clipboard.writeText('Luisa1112#').then(() => {
       const btn = document.querySelector('.copy-btn');
       btn.textContent = '✓ Copiado';
       setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
