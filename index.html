@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acceso WiFi</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+    .icon-circle {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: #e8f0fe; display: flex;
+      align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+    .icon-circle svg { width: 32px; height: 32px; stroke: #1a73e8; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    h1 { font-size: 20px; font-weight: 600; color: #1a1a2e; margin-bottom: 0.4rem; }
+    .subtitle { font-size: 14px; color: #6b7280; margin-bottom: 1.75rem; line-height: 1.5; }
+    label { display: block; text-align: left; font-size: 13px; color: #6b7280; margin-bottom: 6px; }
+    input[type="password"] {
+      width: 100%; padding: 12px 14px; font-size: 15px;
+      border: 1.5px solid #d1d5db; border-radius: 10px;
+      outline: none; transition: border-color 0.2s;
+      color: #1a1a2e;
+    }
+    input[type="password"]:focus { border-color: #1a73e8; }
+    input:disabled { background: #f3f4f6; }
+    button.main-btn {
+      width: 100%; margin-top: 1rem; padding: 13px;
+      background: #1a73e8; color: #fff;
+      font-size: 15px; font-weight: 600;
+      border: none; border-radius: 10px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    button.main-btn:hover { background: #1557b0; }
+    button.main-btn:disabled { background: #9ca3af; cursor: not-allowed; }
+    .error { color: #dc2626; font-size: 13px; margin-top: 0.75rem; display: none; }
+    .locked { color: #dc2626; font-size: 13px; margin-top: 0.75rem; display: none; }
+    .attempts { font-size: 12px; color: #9ca3af; margin-top: 0.5rem; }
+
+    /* Success */
+    #success-card {
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 2.5rem 2rem; width: 100%;
+      max-width: 380px; text-align: center; display: none;
+    }
+    .success-icon { background: #d1fae5; }
+    .success-icon svg { stroke: #059669; }
+    .wifi-box {
+      background: #f9fafb; border-radius: 10px;
+      padding: 1rem 1.25rem; margin: 1.25rem 0; text-align: left;
+    }
+    .wifi-row {
+      display: flex; justify-content: space-between;
+      align-items: center; font-size: 14px; padding: 5px 0;
+    }
+    .wifi-row + .wifi-row { border-top: 1px solid #e5e7eb; margin-top: 5px; padding-top: 10px; }
+    .wifi-lbl { color: #6b7280; }
+    .wifi-val { font-weight: 600; color: #1a1a2e; }
+    button.copy-btn {
+      font-size: 12px; padding: 4px 12px;
+      border: 1px solid #d1d5db; border-radius: 6px;
+      background: #fff; cursor: pointer; color: #374151;
+    }
+    button.copy-btn:hover { background: #f3f4f6; }
+    .hint { font-size: 12px; color: #9ca3af; margin-top: 0.5rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<!-- Login -->
+<div class="card" id="login-card">
+  <div class="icon-circle">
+    <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="#1a73e8" stroke="none"/></svg>
+  </div>
+  <h1>Acceso a WiFi</h1>
+  <p class="subtitle">Ingresa la clave de acceso para ver la contraseña del WiFi</p>
+
+  <label for="key-input">Clave de acceso</label>
+  <input type="password" id="key-input" placeholder="••••••••••" autocomplete="off" />
+
+  <button class="main-btn" onclick="checkKey()">Acceder</button>
+
+  <p class="error" id="error-msg">❌ Clave incorrecta. Intenta de nuevo.</p>
+  <p class="locked" id="locked-msg">🔒 Demasiados intentos. Contacta al administrador.</p>
+  <p class="attempts" id="attempts-left"></p>
+</div>
+
+<!-- Success -->
+<div id="success-card">
+  <div class="icon-circle success-icon">
+    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h1>¡Acceso concedido!</h1>
+  <p class="subtitle">Conéctate con estos datos desde tu celular</p>
+
+  <div class="wifi-box">
+    <div class="wifi-row">
+      <span class="wifi-lbl">Red (SSID)</span>
+      <span class="wifi-val">DIB_b8ag</span>
+    </div>
+    <div class="wifi-row">
+      <span class="wifi-lbl">Contraseña</span>
+      <span class="wifi-val">wlangac2</span>
+      <button class="copy-btn" onclick="copyPw()">Copiar</button>
+    </div>
+  </div>
+  <p class="hint">Ve a <strong>Ajustes → WiFi</strong> en tu celular,<br>busca <strong>DIB_b8ag</strong> e ingresa la contraseña.</p>
+</div>
+
+<script>
+  const CORRECT = "Visita2025#";
+  let attempts = 0;
+  const MAX = 3;
+
+  document.getElementById('key-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkKey();
+  });
+
+  function checkKey() {
+    if (attempts >= MAX) return;
+    const val = document.getElementById('key-input').value;
+    const err = document.getElementById('error-msg');
+    const att = document.getElementById('attempts-left');
+    const locked = document.getElementById('locked-msg');
+
+    if (val === CORRECT) {
+      document.getElementById('login-card').style.display = 'none';
+      document.getElementById('success-card').style.display = 'block';
+    } else {
+      attempts++;
+      err.style.display = 'block';
+      document.getElementById('key-input').value = '';
+      if (attempts >= MAX) {
+        document.getElementById('key-input').disabled = true;
+        document.querySelector('.main-btn').disabled = true;
+        err.style.display = 'none';
+        locked.style.display = 'block';
+        att.textContent = '';
+      } else {
+        att.textContent = 'Intentos restantes: ' + (MAX - attempts);
+      }
+    }
+  }
+
+  function copyPw() {
+    navigator.clipboard.writeText('wlangac2').then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = '✓ Copiado';
+      setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
